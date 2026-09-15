@@ -10,10 +10,10 @@
 
 /**
  * @brief st_mode を drwxr-xr-x@ 形式の文字列にする
- * @param path 拡張属性の有無を調べるパス
- * @param mode ファイルのモード (st_mode)
- * @param out  結果を書き込むバッファ (12バイト以上)
+ * @param mode      ファイルのモード (st_mode)
+ * @param has_xattr 拡張属性があるとき 0 以外
+ * @param out       結果を書き込むバッファ (12バイト以上)
  */
-void format_perm(const char *path, mode_t mode, char *out);
+void format_perm(mode_t mode, int has_xattr, char *out);
 
 #endif

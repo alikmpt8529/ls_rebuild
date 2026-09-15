@@ -1,13 +1,10 @@
 #include "perm.h"
 
-#include <stddef.h>
-#include <sys/xattr.h>
-
 /**
  * @file perm.c
  * @brief 権限文字列の変換
  */
-void format_perm(const char *path, mode_t mode, char *out) {
+void format_perm(mode_t mode, int has_xattr, char *out) {
     //変換処理
     if (S_ISDIR(mode)) {
         out[0] = 'd';
@@ -34,6 +31,6 @@ void format_perm(const char *path, mode_t mode, char *out) {
     out[7] = (mode & S_IROTH) ? 'r' : '-';
     out[8] = (mode & S_IWOTH) ? 'w' : '-';
     out[9] = (mode & S_IXOTH) ? 'x' : '-';
-    out[10] = (listxattr(path, NULL, 0, XATTR_NOFOLLOW) > 0) ? '@' : '\0';
+    out[10] = has_xattr ? '@' : '\0';
     out[11] = '\0';
 }

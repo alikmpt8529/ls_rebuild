@@ -20,6 +20,7 @@ struct File {
     struct timespec mtime; /**< 更新時刻 */
     struct timespec ctime; /**< 状態変更時刻 */
     struct timespec atime; /**< 最終アクセス時刻 */
+    int has_xattr;         /**< 拡張属性があるとき 1 */
 };
 
 #endif

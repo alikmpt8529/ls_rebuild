@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -O2
 OBJS = rls.o perm.o sort.o listing.o
 
 rls: $(OBJS)
