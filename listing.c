@@ -52,6 +52,27 @@ int collect_files(struct File *files, int max) {
 }
 
 /**
+ * @brief ファイルサイズをフォーマットする
+ * @param bytes ファイルサイズ
+ * @param out フォーマット後の文字列
+ * @param out_size フォーマット後の文字列のサイズ
+ */
+static void format_size(off_t bytes, char *out, size_t out_size) {
+    const char *unit[] = {"B", "KB", "MB", "GB", "TB"};
+    double n = (double)bytes;
+    int i = 0;
+    const int unit_count = 5;
+    while (n >= 1024.0 && i < unit_count - 1) {
+        n /= 1024.0;
+        i++;
+    }
+    if (i == 0) {
+        snprintf(out, out_size, "%d%s", (int)bytes, unit[i]);
+    } else {
+        snprintf(out, out_size, "%.1f%s", n, unit[i]);
+    }
+}
+/**
  * @brief ファイル一覧を表示する
  * @param files ファイル一覧
  * @param count ファイル数
@@ -60,9 +81,11 @@ void print_files(const struct File *files, int count) {
     for (int i = 0; i < count; i++) {
         char perm[12];
         char time_str[32];
+        char size_str[16];
         struct tm tm;
 
         format_perm(files[i].st.st_mode, files[i].has_xattr, perm);
+        format_size(files[i].st.st_size, size_str, sizeof(size_str));
         if (localtime_r(&files[i].mtime.tv_sec, &tm) == NULL) {
             snprintf(time_str, sizeof(time_str), "%s", "---- -- -- --:--");
         } else {
@@ -70,6 +93,6 @@ void print_files(const struct File *files, int count) {
                      tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
                      tm.tm_hour, tm.tm_min);
         }
-        printf("%s %s %s\n", perm, files[i].name, time_str);
+        printf("%s %s %s %8s\n", perm, files[i].name, time_str, size_str);
     }
 }
