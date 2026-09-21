@@ -9,12 +9,13 @@
  */
 
 /**
- * @brief カレントディレクトリからファイル情報を集める
+ * @brief 指定ディレクトリからファイル情報を集める
  * @param files 結果を入れる配列
  * @param max   配列の最大件数
+ * @param path  対象ディレクトリ（NULL または空なら "."）
  * @return 読み込んだ件数。失敗時は -1
  */
-int collect_files(struct File *files, int max);
+int collect_files(struct File *files, int max, const char *path);
 
 /**
  * @brief ファイル一覧を表示する

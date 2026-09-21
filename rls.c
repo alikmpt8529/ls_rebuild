@@ -8,31 +8,34 @@
 
 /**
  * @file rls.c
- * @brief カレントディレクトリのファイル一覧を ls 風に表示する
+ * @brief 指定ディレクトリ（省略時はカレント）のファイル一覧を ls 風に表示する
  */
 
 /**
- * @brief カレントディレクトリを読み、新しい順に一覧表示する
+ * @brief ディレクトリを読み、新しい順に一覧表示する
+ * @param argc 引数の数
+ * @param argv 引数（argv[1] があれば対象パス）
  * @return 正常終了なら 0
  */
-int main(void) {
+int main(int argc, char *argv[]) {
     static char stdout_buf[8192];
-    //ファイル一覧を収集
     struct File files[MAX_FILES];
     int counter;
-    //標準出力のバッファリングを設定
+    const char *path = ".";
+
+    if (argc >= 2) {
+        path = argv[1];
+    }
+
     setvbuf(stdout, stdout_buf, _IOFBF, sizeof(stdout_buf));
-    //タイムゾーンを設定
     tzset();
-    //ファイル一覧を収集
-    counter = collect_files(files, MAX_FILES);
+    // ファイル情報を収集
+    counter = collect_files(files, MAX_FILES, path);
     if (counter < 0) {
         return 1;
     }
-    //ファイルを新しい順にソート
+    // ファイル情報をソート
     qsort(files, (size_t)counter, sizeof(struct File), compare_mtime);
-    //ファイル一覧を表示
     print_files(files, counter);
-    //正常終了
     return 0;
 }
